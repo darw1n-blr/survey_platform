@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Param, Post, Query} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post, Query, UseGuards} from '@nestjs/common';
 import {QuestionService} from "./question.service";
 import {CreateQuestionDto} from "./dto/create-question.dto";
 import {CreateChoiceDto} from "./dto/create-choice.dto";
@@ -7,7 +7,10 @@ import {AnswerService} from "./answer.service";
 import {CreateAnswerDto} from "./dto/create-answer.dto";
 import {CreateSurveyResponseDto} from "./dto/create-surveyResponse.dto";
 import {SurveyResponseService} from "./survey-response.service";
+import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 
+
+@UseGuards(JwtAuthGuard)
 @Controller('response')
 export class SurveyResponseController {
     constructor(private questionService: QuestionService,

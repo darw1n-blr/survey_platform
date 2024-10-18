@@ -13,10 +13,12 @@ import {UsersService} from "../users/users.service";
 import {SurveysService} from "../surveys/surveys.service";
 import {ChoiceService} from "./choice.service";
 import {AnswerService} from "./answer.service";
+import {AuthModule} from "../auth/auth.module";
+import {JwtModule} from "@nestjs/jwt";
 
 @Module({
   imports:[
-    SequelizeModule.forFeature([User, SurveyResponse, Answer, Choice, Question, Survey]),
+    SequelizeModule.forFeature([User, SurveyResponse, Answer, Choice, Question, Survey]), AuthModule, JwtModule
   ],
   controllers: [SurveyResponseController],
   providers: [SurveyResponseService, QuestionService, UsersService, SurveysService, ChoiceService, AnswerService]

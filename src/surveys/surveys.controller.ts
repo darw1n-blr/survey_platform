@@ -1,9 +1,10 @@
-import {Body, Controller, Delete, Get, Param, Post, Put} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Post, Put, UseGuards} from '@nestjs/common';
 import {SurveysService} from "./surveys.service";
 import {CreateSurveyDto} from "./dto/create-survey.dto";
+import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 
 
-
+@UseGuards(JwtAuthGuard)
 @Controller('surveys')
 export class SurveysController {
     constructor(private surveyService: SurveysService) {}
