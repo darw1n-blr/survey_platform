@@ -24,7 +24,7 @@ export class SurveysController {
 
     @Get()
     getAllSurveys(){
-        const surveys = this.surveyService.getAllSurveys()
+        const surveys = this.surveyService.getCachedSurveys()
         return surveys;
     }
 

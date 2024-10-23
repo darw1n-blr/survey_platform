@@ -27,7 +27,8 @@ import {Choice} from "./response/models/choice.model";
     database: process.env.POSTGRES_DB,
     models: [User, SurveyResponse, Survey, Choice, Answer, Question],
     autoLoadModels: true
-  }), UsersModule, SurveysModule, SurveyResponseModule, AuthModule,],
+  })
+    , UsersModule, SurveysModule, SurveyResponseModule, AuthModule,],
   controllers: [],
   providers: [],
 })

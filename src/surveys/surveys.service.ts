@@ -1,14 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import {InjectModel} from "@nestjs/sequelize";
 import {Survey} from "./surveys.model";
 import {CreateUserDto} from "../users/dto/create-user.dto";
 import {CreateSurveyDto} from "./dto/create-survey.dto";
 import {Question} from "../response/models/question.model";
+import {CACHE_MANAGER, Cache} from "@nestjs/cache-manager";
 
 @Injectable()
 export class SurveysService {
     constructor(@InjectModel(Survey) private surveyRepository: typeof Survey,
                 @InjectModel(Question) private questionRepository: typeof Question,
+                @Inject(CACHE_MANAGER) private cacheManager: Cache
                 ) {}
 
 
@@ -25,6 +27,16 @@ export class SurveysService {
     async getAllSurveys(){
         const surveys = await this.surveyRepository.findAll()
         return surveys;
+    }
+
+    async getCachedSurveys(){
+        const cachedSurveys = await this.cacheManager.get('surveys')
+        if (cachedSurveys) return cachedSurveys
+
+        const surveys = await this.surveyRepository.findAll()
+        await this.cacheManager.set('surveys', surveys)
+        return surveys
+
     }
 
     async updateSurvey(dto: CreateSurveyDto, id: number){
