@@ -2,6 +2,7 @@
 import {User} from "../../users/user.model";
 import {Survey} from "../../surveys/surveys.model";
 import {Answer} from "./answer.model";
+    import {ApiProperty} from "@nestjs/swagger";
 
 
 interface SurveyResponseCreationAttributes{
@@ -13,9 +14,12 @@ interface SurveyResponseCreationAttributes{
 
 @Table({tableName: 'responses'})
 export class SurveyResponse extends Model<SurveyResponse, SurveyResponseCreationAttributes> {
+
+    @ApiProperty({example: "1", description: 'id'})
     @Column({type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true})
     id: number;
 
+    @ApiProperty({example: "1", description: 'responses user id'})
     @ForeignKey(() => User)
     @Column({type: DataType.INTEGER})
     userId: number;
@@ -23,6 +27,7 @@ export class SurveyResponse extends Model<SurveyResponse, SurveyResponseCreation
     @BelongsTo(() => User)
     user: User
 
+    @ApiProperty({example: "1", description: 'responses survey id'})
     @ForeignKey(() => Survey)
     @Column({type: DataType.INTEGER})
     surveyId: number;
