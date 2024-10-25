@@ -28,6 +28,12 @@ export class SurveysController {
         return surveys;
     }
 
+    @Get("test")
+    getAllSurveysTest(){
+        const surveys = this.surveyService.getAllSurveys()
+        return surveys;
+    }
+
     @Get('questions/:id')
     getQuestions(@Param('id') id: number){
         const questions = this.surveyService.getQuestionsBySurveyId(id)

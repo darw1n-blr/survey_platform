@@ -19,7 +19,6 @@ export class UsersController {
 
 
 
-
     @Get()
     getAllUsers(){
         const users = this.userService.getAllUsers()

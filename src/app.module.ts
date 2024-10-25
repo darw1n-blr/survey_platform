@@ -19,12 +19,13 @@ import {Choice} from "./response/models/choice.model";
         envFilePath: '.env',
       }),
       SequelizeModule.forRoot({
-    dialect: 'postgres',
-    host: process.env.POSTGRES_HOST,
-    port: Number(process.env.POSTGRES_PORT),
-    username: process.env.POSTGRES_USER,
-    password: process.env.POSTGRES_PASSWORD,
-    database: process.env.POSTGRES_DB,
+    dialect: process.env.NODE_ENV === 'test' ? 'sqlite' : 'postgres',
+        storage: process.env.NODE_ENV === 'test' ? ':memory:' : undefined,
+    host: process.env.NODE_ENV === 'test' ? undefined: process.env.POSTGRES_HOST,
+    port: process.env.NODE_ENV === 'test' ? undefined: Number(process.env.POSTGRES_PORT),
+    username: process.env.NODE_ENV === 'test' ? undefined: process.env.POSTGRES_USER,
+    password: process.env.NODE_ENV === 'test' ? undefined: process.env.POSTGRES_PASSWORD,
+    database: process.env.NODE_ENV === 'test' ? undefined: process.env.POSTGRES_DB,
     models: [User, SurveyResponse, Survey, Choice, Answer, Question],
     autoLoadModels: true
   })
