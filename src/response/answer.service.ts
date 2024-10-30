@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from "@nestjs/sequelize";
 import {Question} from "./models/question.model";
 import {Answer} from "./models/answer.model";
@@ -18,11 +18,13 @@ export class AnswerService {
 
     async deleteAnswer(id: number){
         const isDeleted = await this.answerRepository.destroy({where: {id:id}})
+        if (!isDeleted) return new NotFoundException(`Answer with id ${id} does not exist`)
         return isDeleted
     }
 
     async getAnswersFromResponseId(id: number){
         const answers = await this.answerRepository.findAll({where:{responseId:id}})
+        if (!answers) return new NotFoundException(`Answers in response with id ${id} not found`)
         return answers;
     }
 

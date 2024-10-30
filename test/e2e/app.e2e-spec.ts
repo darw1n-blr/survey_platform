@@ -28,7 +28,7 @@ describe('App e2e', () => {
     it('/auth/register POST', async () => {
 
         const data = {
-            email: "test@gmail.com",
+            email: "test1@gmail.com",
             password: "testPassword",
         }
 

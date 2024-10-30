@@ -1,9 +1,8 @@
-import {Body, Controller, Delete, Get, Param, Post, Put, UseGuards} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UseGuards} from '@nestjs/common';
 import {SurveysService} from "./surveys.service";
 import {CreateSurveyDto} from "./dto/create-survey.dto";
 import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 import {ApiOperation, ApiResponse, ApiTags} from "@nestjs/swagger";
-import {User} from "../users/user.model";
 import {Survey} from "./surveys.model";
 import {Question} from "../response/models/question.model";
 
@@ -25,7 +24,7 @@ export class SurveysController {
     @ApiOperation({summary: 'Get survey'})
     @ApiResponse({status: 200, type: Survey})
     @Get(':id')
-    getSurveyById(@Param('id') id: number){
+    getSurveyById(@Param('id', ParseIntPipe) id: number){
         const survey = this.surveyService.getSurvey(id)
         return survey;
 
@@ -50,7 +49,7 @@ export class SurveysController {
     @ApiOperation({summary: 'Get questions from survey'})
     @ApiResponse({status: 200, type: [Question]})
     @Get('questions/:id')
-    getQuestions(@Param('id') id: number){
+    getQuestions(@Param('id', ParseIntPipe) id: number){
         const questions = this.surveyService.getQuestionsBySurveyId(id)
         return questions
     }
@@ -59,7 +58,7 @@ export class SurveysController {
     @ApiResponse({status: 200, type: Survey})
     @Put(':id')
     updateSurvey(@Body() dto: CreateSurveyDto,
-               @Param('id') id: number){
+               @Param('id', ParseIntPipe) id: number){
         const survey = this.surveyService.updateSurvey(dto, id)
         return survey;
     }
@@ -67,7 +66,7 @@ export class SurveysController {
     @ApiOperation({summary: 'Delete survey'})
     @ApiResponse({status: 200, type: Boolean})
     @Delete(':id')
-    deleteSurvey(@Param('id') id: number){
+    deleteSurvey(@Param('id', ParseIntPipe) id: number){
         const survey = this.surveyService.deleteSurvey(id)
         return survey;
     }

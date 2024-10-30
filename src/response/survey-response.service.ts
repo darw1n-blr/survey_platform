@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from "@nestjs/sequelize";
 import {SurveyResponse} from "./models/survey-response.model";
 import {User} from "../users/user.model";
@@ -23,6 +23,7 @@ export class SurveyResponseService {
 
     async getUsersFromSurvey(id: number){
         const usersIds = await this.responseRepository.findAll({attributes: ['userId'], where: {surveyId: id}})
+        if(!usersIds) return new NotFoundException('Users didnt take part in this survey')
         const usersIdsArray = usersIds.map(response => response.userId)
 
         const users = await this.userRepository.findAll({
@@ -39,12 +40,14 @@ export class SurveyResponseService {
 
     async getAmountOfUsersFromSurvey(id: number){
         const usersIds = await this.responseRepository.findAll({attributes: ['userId'], where: {surveyId: id}})
+        if(!usersIds) return new NotFoundException('Users didnt take part in this survey')
         const usersIdsArray = usersIds.map(response => response.userId)
-        return usersIds.length;
+        return usersIdsArray.length;
     }
 
     async getSurveysFromUser(id:number){
         const surveysIds = await this.responseRepository.findAll({attributes: ['surveyId'], where: {userId: id}})
+        if(!surveysIds) return new NotFoundException('Surveys didnt have take part by any user')
         const surveysIdsArray = surveysIds.map(response => response.surveyId)
         console.log(surveysIdsArray)
 

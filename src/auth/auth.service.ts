@@ -1,4 +1,9 @@
-import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+    UnauthorizedException
+} from '@nestjs/common';
 import {CreateUserDto} from "../users/dto/create-user.dto";
 import bcrypt = require("bcrypt");
 import {JwtService} from "@nestjs/jwt";
@@ -20,20 +25,20 @@ export class AuthService {
 
     async register(dto: CreateUserDto){
         const candidate = await this.usersService.getUserByEmail(dto.email);
-        if(candidate){
-            return new HttpException('This user is already registered', HttpStatus.BAD_REQUEST)
-        }
-        const hashedPassword = await bcrypt.hash(dto.password, 10)
-        const user = await this.usersService.createUser({...dto, password: hashedPassword})
-        const token = await this.generateJwt(user.id, user.email)
-        return {token, userId: user.id};
+        if(candidate instanceof NotFoundException){
+            const hashedPassword = await bcrypt.hash(dto.password, 10)
+            const user = await this.usersService.createUser({...dto, password: hashedPassword})
+            const token = await this.generateJwt(user.id, user.email)
+            return {token, userId: user.id}
+      }
+        return new BadRequestException(`User with email ${dto.email} already exists`)
     }
 
     async login(dto: CreateUserDto){
         const user = await this.usersService.getUserByEmail(dto.email);
-        if(!user){ return new HttpException('This email is not registered', HttpStatus.UNAUTHORIZED)}
+        if(user instanceof NotFoundException) return new UnauthorizedException('This email is not registered')
         const comparePassword = bcrypt.compareSync(dto.password, user.password)
-        if(!comparePassword){return new HttpException('Wrong password', HttpStatus.UNAUTHORIZED)}
+        if(!comparePassword) return new UnauthorizedException('Wrong password')
         const token = await this.generateJwt(user.id, user.email)
         return {token, userId: user.id};
 

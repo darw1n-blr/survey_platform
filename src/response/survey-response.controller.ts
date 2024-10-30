@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Param, Post, Query, UseGuards} from '@nestjs/common';
+import {Body, Controller, Get, Param, ParseIntPipe, Post, Query, UseGuards} from '@nestjs/common';
 import {QuestionService} from "./question.service";
 import {CreateQuestionDto} from "./dto/create-question.dto";
 import {CreateChoiceDto} from "./dto/create-choice.dto";
@@ -61,7 +61,7 @@ export class SurveyResponseController {
     @ApiOperation({summary: 'Get question choices'})
     @ApiResponse({status: 200, type: [Choice]})
     @Get('choices/:id')
-    getChoices(@Param('id') id: number){
+    getChoices(@Param('id', ParseIntPipe) id: number){
         const choices = this.choiceService.getChoicesFromQuestionId(id)
         return choices;
     }
@@ -69,7 +69,7 @@ export class SurveyResponseController {
     @ApiOperation({summary: 'Get survey questions'})
     @ApiResponse({status: 200, type: [Question]})
     @Get('questions/:id')
-    getQuestions(@Param('id') id: number){
+    getQuestions(@Param('id', ParseIntPipe) id: number){
         const questions = this.questionService.getQuestionsFromSurveyId(id)
         return questions;
     }
@@ -77,15 +77,15 @@ export class SurveyResponseController {
     @ApiOperation({summary: 'Get response answers'})
     @ApiResponse({status: 200, type: [Answer]})
     @Get('answers/:id')
-    getAnswers(@Param('id') id: number){
+    getAnswers(@Param('id', ParseIntPipe) id: number){
         const answers = this.answerService.getAnswersFromResponseId(id)
         return answers
     }
 
-    @ApiOperation({summary: 'Get users that take survey'})
+    @ApiOperation({summary: 'Get users that took survey'})
     @ApiResponse({status: 200, type: [User]})
     @Get('users/:id')
-    getUsersFromSurveyId(@Param('id') id: number){
+    getUsersFromSurveyId(@Param('id', ParseIntPipe) id: number){
         const users = this.responseService.getUsersFromSurvey(id)
         return users;
     }
@@ -93,7 +93,7 @@ export class SurveyResponseController {
     @ApiOperation({summary: 'Get surveys that user took'})
     @ApiResponse({status: 200, type: [Survey]})
     @Get('surveys/:id')
-    getSurveysFromUserId(@Param('id') id: number){
+    getSurveysFromUserId(@Param('id', ParseIntPipe) id: number){
         const surveys = this.responseService.getSurveysFromUser(id)
         return surveys;
     }
@@ -101,7 +101,7 @@ export class SurveyResponseController {
     @ApiOperation({summary: 'Get amount of users that took survey'})
     @ApiResponse({status: 200, type: Number})
     @Get('users-amount/:id')
-    getUsersAmout(@Param('id') id: number){
+    getUsersAmout(@Param('id', ParseIntPipe) id: number){
         const users = this.responseService.getAmountOfUsersFromSurvey(id)
         return users;
     }
